@@ -41,12 +41,6 @@ $(document).ready(function () {
          }
     });
 
-
-    // log webgl capability
-    // it would seem the webgl "enabling" through advanced settings will be ignored in the future
-    // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
-    var canvas = document.createElement('canvas');
-
     // log library versions in console to make version tracking easier
     console.log('Libraries: jQuery - ' + $.fn.jquery + ', d3 - ' + d3.version + ', three.js - ' + THREE.REVISION);
 
@@ -101,23 +95,11 @@ $(document).ready(function () {
                     case 'firmware_flasher':
                         TABS.firmware_flasher.initialize(content_ready);
                         break;
-                    case 'ports':
-                        TABS.ports.initialize(content_ready);
-                        break;
                     case 'transponder':
                         TABS.transponder.initialize(content_ready);
                         break;
                     case 'setup':
                         TABS.setup.initialize(content_ready);
-                        break;
-                    case 'configuration':
-                        TABS.configuration.initialize(content_ready);
-                        break;
-                    case 'logging':
-                        TABS.logging.initialize(content_ready);
-                        break;
-                    case 'cli':
-                        TABS.cli.initialize(content_ready);
                         break;
 
                     default:
@@ -151,20 +133,8 @@ $(document).ready(function () {
 
                 $('div.notifications input').change(function () {
                     var check = $(this).is(':checked');
-                    googleAnalytics.sendEvent('Settings', 'Notifications', check);
 
                     chrome.storage.local.set({'update_notify': check});
-                });
-
-                // if tracking is enabled, check the statistics checkbox
-                if (googleAnalyticsConfig.isTrackingPermitted()) {
-                    $('div.statistics input').prop('checked', true);
-                }
-
-                $('div.statistics input').change(function () {
-                    var check = $(this).is(':checked');
-                    googleAnalytics.sendEvent('Settings', 'GoogleAnalytics', check);
-                    googleAnalyticsConfig.setTrackingPermitted(check);
                 });
 
                 function close_and_cleanup(e) {

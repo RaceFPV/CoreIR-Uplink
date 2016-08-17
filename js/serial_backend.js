@@ -190,17 +190,14 @@ function onOpen(openInfo) {
 
                     MSP.send_message(MSP_codes.MSP_FC_VERSION, false, false, function () {
 
-                        googleAnalytics.sendEvent('Firmware', 'Variant', CONFIG.flightControllerIdentifier + ',' + CONFIG.flightControllerVersion);
                         GUI.log(chrome.i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
 
                         MSP.send_message(MSP_codes.MSP_BUILD_INFO, false, false, function () {
 
-                            googleAnalytics.sendEvent('Firmware', 'Using', CONFIG.buildInfo);
                             GUI.log(chrome.i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
 
                             MSP.send_message(MSP_codes.MSP_BOARD_INFO, false, false, function () {
 
-                                googleAnalytics.sendEvent('Board', 'Using', CONFIG.boardIdentifier + ',' + CONFIG.boardVersion);
                                 GUI.log(chrome.i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
 
                                 MSP.send_message(MSP_codes.MSP_UID, false, false, function () {
@@ -279,18 +276,9 @@ function onClosed(result) {
 
     $('#tabs ul.mode-connected').hide();
     $('#tabs ul.mode-disconnected').show();
-
-    var sensor_state = $('#sensor-status');
-    sensor_state.hide();
     
     var port_picker = $('#portsinput');
     port_picker.show(); 
-    
-    var dataflash = $('#dataflash_wrapper_global');
-    dataflash.hide();
-    
-    var battery = $('#quad-status_wrapper');
-    battery.hide();
 }
 
 function read_serial(info) {
@@ -326,38 +314,7 @@ function sensor_status(sensors_detected) {
         $('.accicon', e_sensor_status).removeClass('active');
     }
 
-    if (true) { // Gyro status is not reported by FC
-        $('.gyro', e_sensor_status).addClass('on');
-        $('.gyroicon', e_sensor_status).addClass('active');
-    } else {
-        $('.gyro', e_sensor_status).removeClass('on');
-        $('.gyroicon', e_sensor_status).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'baro')) {
-        $('.baro', e_sensor_status).addClass('on');
-        $('.baroicon', e_sensor_status).addClass('active');
-    } else {
-        $('.baro', e_sensor_status).removeClass('on');
-        $('.baroicon', e_sensor_status).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'mag')) {
-        $('.mag', e_sensor_status).addClass('on');
-        $('.magicon', e_sensor_status).addClass('active');
-    } else {
-        $('.mag', e_sensor_status).removeClass('on');
-        $('.magicon', e_sensor_status).removeClass('active');
-    }
-
-    if (have_sensor(sensors_detected, 'gps')) {
-        $('.gps', e_sensor_status).addClass('on');
-        $('.gpsicon', e_sensor_status).addClass('active');
-    } else {
-        $('.gps', e_sensor_status).removeClass('on');
-        $('.gpsicon', e_sensor_status).removeClass('active');
-    }
-
+    if (true) { //
     if (have_sensor(sensors_detected, 'sonar')) {
         $('.sonar', e_sensor_status).addClass('on');
         $('.sonaricon', e_sensor_status).addClass('active');
@@ -367,57 +324,12 @@ function sensor_status(sensors_detected) {
     }
 }
 
-function have_sensor(sensors_detected, sensor_code) {
-    switch(sensor_code) {
-        case 'acc':
-            return bit_check(sensors_detected, 0);
-        case 'baro':
-            return bit_check(sensors_detected, 1);
-        case 'mag':
-            return bit_check(sensors_detected, 2);
-        case 'gps':
-            return bit_check(sensors_detected, 3);
-        case 'sonar':
-            return bit_check(sensors_detected, 4);
-    }
-    return false;
-}
-
 function highByte(num) {
     return num >> 8;
 }
 
 function lowByte(num) {
     return 0x00FF & num;
-}
-
-function update_dataflash_global() {
-    var supportsDataflash = DATAFLASH.totalSize > 0;
-    if (supportsDataflash){
-
-         $(".noflash_global").css({
-             display: 'none'
-         }); 
-
-         $(".dataflash-contents_global").css({
-             display: 'block'
-         }); 
-	     
-         $(".dataflash-free_global").css({
-             width: (100-(DATAFLASH.totalSize - DATAFLASH.usedSize) / DATAFLASH.totalSize * 100) + "%",
-             display: 'block'
-         });
-         $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(DATAFLASH.totalSize - DATAFLASH.usedSize));
-    } else {
-         $(".noflash_global").css({
-             display: 'block'
-         }); 
-
-         $(".dataflash-contents_global").css({
-             display: 'none'
-         }); 
-    }      
-
 }
 
 function startLiveDataRefreshTimer() {
@@ -440,61 +352,6 @@ function update_live_status() {
     }
     
     var active = ((Date.now() - MSP.analog_last_received_timestamp) < 300);
-
-    for (var i = 0; i < AUX_CONFIG.length; i++) {
-       if (AUX_CONFIG[i] == 'ARM') {
-               if (bit_check(CONFIG.mode, i))
-                       $(".armedicon").css({
-                               'background-image': 'url(images/icons/cf_icon_armed_active.svg)'
-                           });
-               else
-                       $(".armedicon").css({
-                               'background-image': 'url(images/icons/cf_icon_armed_grey.svg)'
-                           });
-       }
-       if (AUX_CONFIG[i] == 'FAILSAFE') {
-               if (bit_check(CONFIG.mode, i))
-                       $(".failsafeicon").css({
-                               'background-image': 'url(images/icons/cf_icon_failsafe_active.svg)'
-                           });
-               else
-                       $(".failsafeicon").css({
-                               'background-image': 'url(images/icons/cf_icon_failsafe_grey.svg)'
-                           });
-       }
-    }
-    if (ANALOG != undefined) {
-    var nbCells = Math.floor(ANALOG.voltage / MISC.vbatmaxcellvoltage) + 1;   
-    if (ANALOG.voltage == 0)
-           nbCells = 1;
-   
-       var min = MISC.vbatmincellvoltage * nbCells;
-       var max = MISC.vbatmaxcellvoltage * nbCells;
-       var warn = MISC.vbatwarningcellvoltage * nbCells;
-       
-       $(".battery-status").css({
-          width: ((ANALOG.voltage - min) / (max - min) * 100) + "%",
-          display: 'inline-block'
-       });
-   
-       if (active) {
-           $(".linkicon").css({
-               'background-image': 'url(images/icons/cf_icon_link_active.svg)'
-           });
-       } else {
-           $(".linkicon").css({
-               'background-image': 'url(images/icons/cf_icon_link_grey.svg)'
-           });
-       } 
-       
-       if (ANALOG.voltage < warn) {
-           $(".battery-status").css('background-color', '#D42133');
-       } else  {
-           $(".battery-status").css('background-color', '#59AA29');
-       }
-       
-       $(".battery-legend").text(ANALOG.voltage + " V");
-    }
 
     statuswrapper.show();
     GUI.timeout_remove('data_refresh');
@@ -532,30 +389,4 @@ function update_dataflash_global() {
         
         return megabytes.toFixed(1) + "MB";
     }
-  
-    var supportsDataflash = DATAFLASH.totalSize > 0;
-
-    if (supportsDataflash){
-        $(".noflash_global").css({
-           display: 'none'
-        }); 
-
-        $(".dataflash-contents_global").css({
-           display: 'block'
-        }); 
-	     
-        $(".dataflash-free_global").css({
-           width: (100-(DATAFLASH.totalSize - DATAFLASH.usedSize) / DATAFLASH.totalSize * 100) + "%",
-           display: 'block'
-        });
-        $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(DATAFLASH.totalSize - DATAFLASH.usedSize));
-     } else {
-        $(".noflash_global").css({
-           display: 'block'
-        }); 
-
-        $(".dataflash-contents_global").css({
-           display: 'none'
-        }); 
-     }      
 }

@@ -14,14 +14,10 @@ var GUI_control = function () {
     this.timeout_array = [];
     this.defaultAllowedTabsWhenDisconnected = [
         'landing',
-        'firmware_flasher',
-        'help'
+        'firmware_flasher'
     ];
     this.defaultAllowedTabsWhenConnected = [
         'transponder',
-        'cli',
-        'configuration',
-        'logging',
         'setup'
     ];
     this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;

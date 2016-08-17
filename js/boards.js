@@ -2,12 +2,8 @@
 
 var BOARD_DEFINITIONS = [
     {
-        name: "MicroMinimOSD",
-        identifier: "MicroMinimOSD",
-        vcp: true
-    }, {
-        name: "MinimOSD",
-        identifier: "MinimOSD",
+        name: "CoreIR v1",
+        identifier: "CoreIRv1",
         vcp: true
     }
 ];

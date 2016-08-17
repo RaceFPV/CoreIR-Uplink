@@ -128,7 +128,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             TABS.firmware_flasher.releases = releases;
         };
 
-        $.get('https://api.github.com/repos/cleanflight/cleanflight/releases', function (releasesData){
+        $.get('https://api.github.com/repos/slacker87/coreir/releases', function (releasesData){
             TABS.firmware_flasher.releasesData = releasesData;
             buildBoardOptions();
 
@@ -262,7 +262,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         $('a.flash_firmware').removeClass('disabled');
 
                         if (summary.commit) {
-                            $.get('https://api.github.com/repos/ShikOfTheRa/scarab-osd/commits/' + summary.commit, function (data) {
+                            $.get('https://api.github.com/repos/slacker87/coreir/commits/' + summary.commit, function (data) {
                                 var data = data,
                                     d = new Date(data.commit.author.date),
                                     offset = d.getTimezoneOffset() / 60,
@@ -274,7 +274,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
                                 $('div.git_info .committer').text(data.commit.author.name);
                                 $('div.git_info .date').text(date);
-                                $('div.git_info .hash').text(data.sha.slice(0, 7)).prop('href', 'https://github.com/ShikOfTheRa/scarab-osd/commit/' + data.sha);
+                                $('div.git_info .hash').text(data.sha.slice(0, 7)).prop('href', 'https://github.com/slacker87/coreir/commit/' + data.sha);
 
                                 $('div.git_info .message').text(data.commit.message);
 
@@ -377,7 +377,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         $(document).on('click', 'span.progressLabel a.save_firmware', function () {
-            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'MWOSD', accepts: [{extensions: ['hex']}]}, function (fileEntry) {
+            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'CoreIR', accepts: [{extensions: ['hex']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {
                     console.error(chrome.runtime.lastError.message);
                     return;

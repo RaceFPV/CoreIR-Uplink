@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>CoreIR-Uplink</title>
+		<link rel="stylesheet" href="index.css">
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<section class="main">
+				<h1 align="center">CoreIR-Uplink</h1>
+				<br/><br/>
+				<div class="row">
+				<div class="col-sm-6 col-sm-offset-3" align="center">
+					<button class="btn btn-primary btn-lg" onclick="flash()">Flash!</button>
+				</div>
+				</div>
+			</section>
+			<footer></footer>
+			<script>var Avrgirl = require('avrgirl-arduino');
+
+var avrgirl = new Avrgirl({
+  board: 'micro'
+});
+
+function flash() {
+	avrgirl.flash('CoreIR.hex', function (error) {
+	  if (error) {
+		console.error(error);
+	  } else {
+		console.info('done.');
+	  }
+	});
+};
+</script>
+		</div>
+	</body>
+</html>

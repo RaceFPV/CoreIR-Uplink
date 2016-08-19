@@ -1,36 +1,3 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>CoreIR-Uplink</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="description" content="CoreIR-Uplink">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-     label {
-      display: block;
-      padding: 10px 0 10px 0;
-     }
-    </style>
-  </head>
-  <body>
-    <p>Choose a local CoreIR file to upload</p>
-    <form id="uploadForm">
-      <label>Local File:
-        <input id="fileInput" type="file"/>
-      </label>
-
-      <label>CoreIR board/version:
-        <select id="boardType">
-          <option value="micro">CoreIR v1.0</option>
-          <option value="nano">DIY Nano v3</option>
-        </select>
-      </label>
-
-      <input type="submit" id="uploadBtn" value="Flash"/>
-    </form>
-
-    <script type="text/javascript">
 
       function handleSubmit(e) {
         e.preventDefault();
@@ -69,14 +36,11 @@
       uploadForm.addEventListener('submit', handleSubmit, false);
 
       // open long lived connection with extension (it takes time for flash to complete)
-      var extensionid = 'nhnbpmfoaobijgenpglphdlnffigljlm';
+      var extensionid = chrome.runtime.id;
       var port = chrome.runtime.connect(extensionid);
 
       // log out any responses we get from the chrome app
       port.onMessage.addListener(function(msg) {
         console.log('CoreIR-Uplink is done:', msg);
+        window.alert('done');
       });
-
-    </script>
-  </body>
-</html>

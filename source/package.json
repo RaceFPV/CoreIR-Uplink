@@ -27,11 +27,12 @@
   "dependencies": {
     "electron-debug": "^1.0.0",
 	"serialport": "latest",
-	"avrgirl-arduino": "latest"
+	"avrgirl-arduino": "latest",
+	"avrgirl-ispmkii": "latest"
   },
   "devDependencies": {
     "devtron": "^1.1.0",
-    "electron-packager": "^7.0.0",
+    "electron-packager": "latest",
     "electron": "^1.0.1",
     "xo": "^0.16.0",
 	"electron-rebuild": "latest"

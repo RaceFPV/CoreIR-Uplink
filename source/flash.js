@@ -1,17 +1,15 @@
 var Avrgirl = require('avrgirl-arduino');
+var sp = require('serialport');
 
 var avrgirl = new Avrgirl({
   board: 'micro'
 });
 
 function flash() {
-	avrgirl.flash('CoreIR.hex', function (error) {
-	  if (error) {
-		console.error(error);
-	  } else {
-		console.info('done.');
-	  }
-	});
+
+  sp.list(function(err, ports) {
+    console.log(ports);
+  });
 };
 
 Avrgirl.list(function(err, ports) {

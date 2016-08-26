@@ -22,11 +22,10 @@
     "node-pre-gyp": "^0.6.29"
   },
   "dependencies": {
-    "download-file": "^0.1.5",
-    "serialport": "^4.0.1",
     "avrgirl-arduino": "latest",
+    "avrgirl-chips-json": "^2.0.2",
     "avrgirl-stk500v2": "latest",
-    "avrgirl-chips-json": "latest"
+    "download-file": "^0.1.5"
   },
   "engine": "^6.3.1"
 }

@@ -13,31 +13,67 @@
 				<br/><br/>
 				<div class="row">
 				<div class="col-sm-6 col-sm-offset-3" align="center">
-					<button class="btn btn-primary btn-lg" onclick="flash()">Flash!</button>
+					<button class="btn btn-primary btn-lg" onclick="downloadHex()">Download latest version</button>
+				</div>
+				</div>
+				<div class="row">
+				<div class="col-sm-6 col-sm-offset-3" align="center">
+					<button class="btn btn-primary btn-lg" onclick="flashme()">Flash!</button>
 				</div>
 				</div>
 			</section>
 			<footer></footer>
 			<script>
+				var download = require('download-file');
+				function downloadHex() {
+					var url = "https://raw.githubusercontent.com/slacker87/CoreIR/master/CoreIR.hex";
+					var options = {
+    				directory: "./downloads/hex/",
+    				filename: "CoreIR.hex"
+					};
+					download(url, options, function(err){
+    				if (err) throw err
+	    				console.log("Failed to download");
+					});
+				};
+			</script>
+			<script>
+				//fire up AVRGirl and start flashing files
+				var Avrgirl = require('avrgirl-arduino');
 
-var Avrgirl = require('avrgirl-arduino');
 
-function flash() {
-Avrgirl.list(function(err, ports) {
-  console.log(ports);
-  /*
-  [ { comName: '/dev/cu.usbmodem1421',
-       manufacturer: 'Arduino (www.arduino.cc)',
-      serialNumber: '55432333038351F03170',
-      pnpId: '',
-      locationId: '0x14200000',
-      vendorId: '0x2341',
-      productId: '0x0043',
-      _standardPid: '0x0043' } ]
-  */
-});
-};
-</script>
+				Avrgirl.list(function(err, ports) {
+				  console.log(ports);
+				  /*
+				  [ { comName: '/dev/cu.usbmodem1421',
+				       manufacturer: 'Arduino (www.arduino.cc)',
+				      serialNumber: '55432333038351F03170',
+				      pnpId: '',
+				      locationId: '0x14200000',
+				      vendorId: '0x2341',
+				      productId: '0x0043',
+				      _standardPid: '0x0043' } ]
+				  */
+				});
+			</script>
+			<script>
+				var Avrgirl = require('avrgirl-arduino');
+				function flashme() {
+				var avrgirl = new Avrgirl({
+				  board: 'nano',
+				  // turn on debug mode!
+				  debug: true
+				});
+
+				avrgirl.flash('./downloads/hex/CoreIR.hex', function (error) {
+				  if (error) {
+				    console.error(error);
+				  } else {
+				    console.info('done.');
+				  }
+				});
+				};
+			</script>
 		</div>
 	</body>
 </html>

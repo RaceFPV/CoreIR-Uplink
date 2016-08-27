@@ -25,9 +25,9 @@
 							</div><!-- /input-group -->
 								<br/><br/>
 								<div class="input-group">
-									<input type="text" class="form-control" placeholder="Set a new ID Number (7 digits)">
+									<input type="text" class="form-control" id="setid" placeholder="Set a new ID Number (7 digits)">
 									<span class="input-group-btn">
-										<button class="btn btn-danger" type="button">Save new ID</button>
+										<button class="btn btn-danger" type="button" onclick="writeID()">Save new ID</button>
 									</span>
 								</div><!-- /input-group -->
 						  </div>
@@ -123,6 +123,32 @@
 					    console.log('port closed');
 						});
 				  });
+				});
+			};
+			</script>
+			<script>
+				var serialport = require('serialport');
+				function writeID() {
+				var idtowrite = document.getElementById('setid').value;
+				idtowrite = "writeID" + idtowrite;
+				var serialPort = new serialport("COM12");
+				serialPort.on("open", function () {
+				  console.log('port open');
+					serialPort.write(idtowrite, function(err) {
+						if (err) {
+							return console.log('Error on write: ', err.message);
+						}
+						console.log('New ID sent');
+						serialPort.on('data', function(data) {
+							console.log('got back: ' + data);
+							document.getElementById('currentid').value = data;
+							serialPort.close(function(err) {if (err) {
+								return console.log('Error on close: ', err.message);
+							};
+								console.log('port closed');
+							});
+							});
+						});
 				});
 			};
 			</script>

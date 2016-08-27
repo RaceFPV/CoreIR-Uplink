@@ -24,7 +24,6 @@
   "dependencies": {
     "avrgirl-arduino": "latest",
     "avrgirl-chips-json": "^2.0.2",
-    "avrgirl-stk500v2": "latest",
     "download-file": "^0.1.5"
   },
   "engine": "^6.3.1"

@@ -141,7 +141,22 @@
 						console.log('New ID sent');
 						serialPort.on('data', function(data) {
 							console.log('got back: ' + data);
+							if (data.length < 9) {
+								console.log('Failed to set new ID, trying again');
+								serialPort.write(idtowrite, function(err) {
+									if (err) {
+										return console.log('Error on write: ', err.message);
+									}
+										console.log('port closed');
+									});
+									serialPort.on('data', function(data) {
+										console.log('got back: ' + data);
+										document.getElementById('currentid').value = data;
+									});
+						}
+						else {
 							document.getElementById('currentid').value = data;
+						}
 							serialPort.close(function(err) {if (err) {
 								return console.log('Error on close: ', err.message);
 							};

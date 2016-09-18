@@ -2,9 +2,10 @@
 const electron = require('electron');
 
 const app = electron.app;
-
+var dialog = app.dialog;
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
+require('avrgirl-arduino')();
 
 // prevent window being garbage collected
 let mainWindow;

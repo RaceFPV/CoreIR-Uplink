@@ -17,14 +17,16 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^1.3.3",
-    "electron-debug": "^1.0.0",
+    "electron-debug": "^1.0.1",
     "node-gyp": "^3.4.0",
     "node-pre-gyp": "^0.6.29"
   },
   "dependencies": {
+    "electron-prebuilt": "^1.3.3",
     "avrgirl-arduino": "latest",
-    "avrgirl-chips-json": "^2.0.2",
-    "download-file": "^0.1.5"
+    "avrgirl-chips-json": "latest",
+    "download-file": "^0.1.5",
+    "electron-debug": "^1.0.1"
   },
   "engine": "^6.3.1"
 }

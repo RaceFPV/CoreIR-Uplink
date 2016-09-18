@@ -10,12 +10,12 @@
 		<div class="container">
 			<section class="main">
 				<div class="page-header" align="center">
-			  	<h1 style="color: #333;">CoreIR-Uplink</h1>
+			  	<h1 style="color: #333;">CoreIR-Uplink <small>Alpha build</small></h1>
 				</div>
 				<div class="row">
 					<div class="col-xs-10 col-xs-offset-1" align="center">
 						<div class="panel panel-default">
-							<div class="panel-heading">Enter a 7 digit ID number and save it to your CoreIR transponder:</div>
+							<div class="panel-heading">Enter a 7 digit ID number and save it to your CoreIR transponder</div>
 	  					<div class="panel-body">
 								<div class="comport">
 									<div class="btn-group" data-toggle="buttons" id="comports">
@@ -44,13 +44,13 @@
 				<div class="row">
 					<div class="col-xs-10 col-xs-offset-1" align="center">
 						<div class="panel panel-default">
-							<div class="panel-heading">Download the latest version of CoreIR and send it to your device</div>
+							<div class="panel-heading">Download the latest version of CoreIR and send it to your transponder</div>
 							<div class="panel-body">
 								<div class="col-xs-5 col-xs-offset-1">
-								<button class="btn btn-success btn-lg" onclick="downloadHex()">Download latest version</button>
+								<button class="btn btn-default btn-lg" onclick="downloadHex()">Download latest version</button>
 							</div>
 									<div class="col-xs-5 col-xs-offset-1">
-								<button class="btn btn-danger btn-lg" onclick="flashme()">Update!</button>
+								<button class="btn btn-default btn-lg" onclick="flashme()">Flash latest version</button>
 							</div>
 							</div>
 						</div>
@@ -61,9 +61,9 @@
 			<script>
 				var download = require('download-file');
 				function downloadHex() {
-					var url = "https://raw.githubusercontent.com/slacker87/CoreIR/master/CoreIR.ino.micro.hex";
+					var url = "https://raw.githubusercontent.com/slacker87/CoreIR/master/CoreIR.hex";
 					var options = {
-    				directory: "./downloads/hex/",
+    				directory: "downloads/hex/",
     				filename: "CoreIR.hex"
 					};
 					download(url, options, function(err){
@@ -103,7 +103,7 @@
 				  debug: false
 				});
 
-				avrgirl.flash('./downloads/hex/CoreIR.hex', function (error) {
+				avrgirl.flash('downloads/hex/CoreIR.hex', function (error) {
 				  if (error) {
 				    console.error(error);
 				  } else {

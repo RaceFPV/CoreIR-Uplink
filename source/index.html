@@ -17,12 +17,19 @@
 						<div class="panel panel-default">
 							<div class="panel-heading">Enter a 7 digit ID number and save it to your CoreIR transponder:</div>
 	  					<div class="panel-body">
-							<div class="input-group">
-								<input type="text" class="form-control" readonly="readonly" id="currentid" placeholder="Click 'Get current ID' to read existing ID from transponder">
-								<span class="input-group-btn">
-									<button class="btn btn-success" type="button" onclick="readID()">Get current ID</button>
-								</span>
-							</div><!-- /input-group -->
+								<div class="comport">
+									<div class="btn-group" data-toggle="buttons" id="comports">
+
+									</div>
+									<button class="btn btn-primary glyphicon glyphicon-refresh" type="button" onclick="comrefresh()"></button>
+								</div>
+								<br/>
+								<div class="input-group">
+									<input type="text" class="form-control" readonly="readonly" id="currentid" placeholder="Click 'Get current ID' to read existing ID from transponder">
+									<span class="input-group-btn">
+										<button class="btn btn-success" type="button" onclick="readID()">Get current ID</button>
+									</span>
+								</div><!-- /input-group -->
 								<br/><br/>
 								<div class="input-group">
 									<input type="text" class="form-control" id="setid" placeholder="Set a new ID Number (7 digits)">
@@ -66,31 +73,34 @@
 				};
 			</script>
 			<script>
-				//fire up AVRGirl and start flashing files
 				var Avrgirl = require('avrgirl-arduino');
-
-
-				Avrgirl.list(function(err, ports) {
-				  console.log(ports);
-				  /*
-				  [ { comName: '/dev/cu.usbmodem1421',
-				       manufacturer: 'Arduino (www.arduino.cc)',
-				      serialNumber: '55432333038351F03170',
-				      pnpId: '',
-				      locationId: '0x14200000',
-				      vendorId: '0x2341',
-				      productId: '0x0043',
-				      _standardPid: '0x0043' } ]
-				  */
-				});
+				var ports;
+				var portselected = "";
+				function selectMe(port){
+					document.getElementById("comports").querySelectorAll("label").forEach(function (button) {
+						button.classList.remove("active");
+					});
+					port.classList.add("active");
+				};
+				function comrefresh() {
+					document.getElementById("comports").innerHTML = "";
+					Avrgirl.list(function(err, ports) {
+						ports.forEach(function (port) {
+							document.getElementById("comports").innerHTML += '<label class="btn btn-primary" onClick="selectMe(this)"><input type="radio" name="'+port.comName+'" id="'+port.comName+'" autocomplete="off"> '+port.comName+'</label>';
+						});
+						if (ports.length == 1) {
+							document.getElementById("comports").querySelectorAll("label")[0].classList.add("active");
+						};
+					});
+				};
+			comrefresh();
 			</script>
 			<script>
-				var Avrgirl = require('avrgirl-arduino');
 				function flashme() {
 				var avrgirl = new Avrgirl({
 				  board: 'micro',
 				  // turn on debug mode!
-				  debug: true
+				  debug: false
 				});
 
 				avrgirl.flash('./downloads/hex/CoreIR.hex', function (error) {
@@ -105,33 +115,45 @@
 			<script>
 				var serialport = require('serialport');
 				function readID() {
-				var serialPort = new serialport("COM12");
-				serialPort.on("open", function () {
-				  console.log('port open');
-					serialPort.write('readID', function(err) {
-						if (err) {
-							return console.log('Error on write: ', err.message);
-						}
-						console.log('message written');
-						});
-				  serialPort.on('data', function(data) {
-				    console.log('data received: ' + data);
-						document.getElementById('currentid').value = data;
-						serialPort.close(function(err) {if (err) {
-							return console.log('Error on close: ', err.message);
-						};
-					    console.log('port closed');
-						});
-				  });
-				});
-			};
+					try {
+						var portselected = document.getElementById("comports").getElementsByClassName("active")[0].childNodes[0].id;
+					}
+					catch(err) {
+						return alert("Please select the USB port connected to your CoreIR transponder or unplug all other USB devices");
+					}
+					console.log("Found selected port " + portselected);
+					var serialPort = new serialport(portselected);
+					serialPort.on("open", function () {
+					  console.log('port open');
+						serialPort.write('readID', function(err) {
+							if (err) {
+								return console.log('Error on write: ', err.message);
+							}
+							console.log('message written');
+							});
+					  serialPort.on('data', function(data) {
+					    console.log('data received: ' + data);
+							document.getElementById('currentid').value = data;
+							serialPort.close(function(err) {if (err) {
+								return console.log('Error on close: ', err.message);
+							};
+						    console.log('port closed');
+							});
+					  });
+					});
+				};
 			</script>
 			<script>
-				var serialport = require('serialport');
 				function writeID() {
 				var idtowrite = document.getElementById('setid').value;
 				idtowrite = "writeID" + idtowrite;
-				var serialPort = new serialport("COM12");
+				try {
+					var portselected = document.getElementById("comports").getElementsByClassName("active")[0].childNodes[0].id;
+				}
+				catch(err) {
+					return alert("Please select the USB port connected to your CoreIR transponder or unplug all other USB devices");
+				}
+				var serialPort = new serialport(portselected);
 				serialPort.on("open", function () {
 				  console.log('port open');
 					serialPort.write(idtowrite, function(err) {
